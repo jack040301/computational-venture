@@ -37,12 +37,9 @@ class RequestedDialog {
   CollectionReference users = FirebaseFirestore.instance.collection('users');
   // static String place = "",id = "",land = "",land_size = "",popu_future = "",popu_past ="",population="",revenue="",request_status="";
 
-
-
   Future savedRequestMarker(context) async {
     count += 1;
     GeoPoint geopoint = GeoPoint(lat, lng);
-
 
     var docu = GoogleUserStaticInfo().uid.toString();
     FirebaseFirestore.instance
@@ -72,40 +69,48 @@ class RequestedDialog {
                           .limit(1)
                           .get()
                           .then((QuerySnapshot querySnapshot) => {
-                        querySnapshot.docs.forEach((documents) async {
-                          var data = documents.data() as Map;
+                                querySnapshot.docs.forEach((documents) async {
+                                  var data = documents.data() as Map;
 
-                          if (data['request_status'] == true) {
+                                  if (data['request_status'] == true) {
+                                    final pinnedData = {
+                                      "coords": geopoint,
+                                      "place": "pinned-request by " +
+                                          GoogleUserStaticInfo()
+                                              .name
+                                              .toString(),
+                                      "id": data['id'],
+                                      "land": data['land'],
+                                      "land_size": data['land_size'],
+                                      "popu_future": data['popu_future'],
+                                      "popu_past": data['popu_past'],
+                                      "population": data['population'],
+                                      "revenue": data['revenue'],
+                                      "user_id_requested":
+                                          GoogleUserStaticInfo().uid,
+                                      "request_status": false,
+                                    };
 
-                            final pinnedData = {
-                              "coords": geopoint,
-                              "place": "pinned-request by " + GoogleUserStaticInfo().name.toString(),
-                              "id":  data['id'],
-                              "land":  data['land'],
-                              "land_size": data['land_size'],
-                              "popu_future": data['popu_future'],
-                              "popu_past": data['popu_past'],
-                              "population": data['population'],
-                              "revenue": data['revenue'],
-                              "user_id_requested": GoogleUserStaticInfo().uid,
-                              "request_status": false,
-                            };
-
-                            var db = FirebaseFirestore.instance;
-                            db
-                                .collection("markers")
-                                .doc(count.toString() + "-" + GoogleUserStaticInfo().email.toString())
-                                .set(pinnedData)
-                                .then((documentSnapshot) => {
-                              alertmessage(context)
-                              //showing if data is saved
-                            })
-                                .catchError((error) {
-                              ScaffoldMessenger.of(context).showSnackBar(error);
-                            });
-                          }
-                        }) //for loop
-                      });
+                                    var db = FirebaseFirestore.instance;
+                                    db
+                                        .collection("markers")
+                                        .doc(count.toString() +
+                                            "-" +
+                                            GoogleUserStaticInfo()
+                                                .email
+                                                .toString())
+                                        .set(pinnedData)
+                                        .then((documentSnapshot) => {
+                                              alertmessage(context)
+                                              //showing if data is saved
+                                            })
+                                        .catchError((error) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(error);
+                                    });
+                                  }
+                                }) //for loop
+                              });
                       // print("ekis");
                       hasEnd = true;
                     }
@@ -115,10 +120,7 @@ class RequestedDialog {
                 //
               }) //for loop
             });
-    
-
-  }//savedRequestMarker close
-
+  } //savedRequestMarker close
 
   Future<int> countPerUserRequest() async {
     await FirebaseFirestore.instance
@@ -138,7 +140,7 @@ class RequestedDialog {
         (element) => element.markerId == MarkerId("marker_$counter"));
 
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-     //   behavior: SnackBarBehavior.floating,
+        //   behavior: SnackBarBehavior.floating,
         content: Text('Tap to another place')));
   }
 
