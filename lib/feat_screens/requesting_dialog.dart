@@ -89,6 +89,7 @@ class RequestedDialog {
                                       "user_id_requested":
                                           GoogleUserStaticInfo().uid,
                                       "request_status": false,
+                                      "createdAt": Timestamp.now(),
                                     };
 
                                     var db = FirebaseFirestore.instance;
