@@ -177,7 +177,8 @@ class _DemogResultState extends State<DemogResult> {
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference mark = FirebaseFirestore.instance.collection("markers");
+    CollectionReference mark =
+        FirebaseFirestore.instance.collection("parallel_markers");
     final String con = widget.marker.trim(); //this still has problem
     return FutureBuilder<DocumentSnapshot>(
       future: mark.doc(con).get(),
@@ -271,7 +272,7 @@ class _DemogResultState extends State<DemogResult> {
                                 padding:
                                     const EdgeInsets.fromLTRB(35, 15, 35, 5),
                                 color: Colors.white,
-                                child:  Row(
+                                child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       Center(
@@ -311,7 +312,7 @@ class _DemogResultState extends State<DemogResult> {
                                 padding:
                                     const EdgeInsets.fromLTRB(35, 10, 35, 5),
                                 color: Colors.white,
-                                child:  Row(
+                                child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       Center(
@@ -395,7 +396,7 @@ class _DemogResultState extends State<DemogResult> {
                                 padding:
                                     const EdgeInsets.fromLTRB(35, 10, 35, 5),
                                 color: Colors.white,
-                                child:  Row(
+                                child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       Center(
@@ -435,7 +436,7 @@ class _DemogResultState extends State<DemogResult> {
                                 padding:
                                     const EdgeInsets.fromLTRB(35, 10, 35, 5),
                                 color: Colors.white,
-                                child:  Row(
+                                child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       Center(
@@ -484,7 +485,7 @@ class _DemogResultState extends State<DemogResult> {
                                 padding:
                                     const EdgeInsets.fromLTRB(35, 2, 35, 5),
                                 color: Colors.white,
-                                child:  Row(
+                                child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       Center(
@@ -530,7 +531,7 @@ class _DemogResultState extends State<DemogResult> {
                                 padding:
                                     const EdgeInsets.fromLTRB(35, 2, 35, 5),
                                 color: Colors.white,
-                                child:  Row(
+                                child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       Center(

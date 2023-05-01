@@ -64,9 +64,16 @@ class _HomePageState extends ConsumerState<HomePage> with Userinformation {
 // <<<<<<< HEAD
     content: Text(
         'You cant request for this restricted location. Please choose other locations to request for pinning'),
+
 // =======
     // content: Text('This Area have Establishment, Please tap other Area'),
 // >>>>>>> 0d93212a53365f07b5bddcd5ad8c2c5a2a27d2c0
+  );
+
+  var PinRequestedSuccessfully = const SnackBar(
+// <<<<<<< HEAD
+    content: Text(
+        'You cant request for this restricted location. Please choose other locations to request for pinning'),
   );
 
 // Markers set
@@ -223,9 +230,9 @@ class _HomePageState extends ConsumerState<HomePage> with Userinformation {
     return allmarkers;
   } */
 
-  Future testMarker() async {
+  Future markersInParallel() async {
     await FirebaseFirestore.instance
-        .collection("markers")
+        .collection("parallel_markers")
         .where("request_status", isEqualTo: true)
         .get()
         .then((QuerySnapshot querySnapshot) => {
@@ -237,6 +244,21 @@ class _HomePageState extends ConsumerState<HomePage> with Userinformation {
 
                 allmarkers.add(Marker(
                     onTap: () async {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ZoneScreen(
+                                    dataID: documents.id,
+                                    coordinates_latitude:
+                                        data["coords"].latitude,
+                                    coordinates_longitude:
+                                        data["coords"].longitude,
+                                    place: data["place"],
+                                    population: data["population"],
+                                    revenue: data["revenue"],
+                                    land_size: data["land_size"],
+                                  )));
+
                       /*  await DialogQuestion(
                               documents.id, dropdownDatas, dropdownAssumption)
                           .showMyDialog(context); */
@@ -301,8 +323,8 @@ class _HomePageState extends ConsumerState<HomePage> with Userinformation {
       ScaffoldMessenger.of(context).showSnackBar(map_pinnedLoc);
     } else {
       // debugPrint(greatercoordinates.latitude.toString());
-
-      await FirebaseFirestore.instance
+      ScaffoldMessenger.of(context).showSnackBar(PinRequestedSuccessfully);
+      /*  await FirebaseFirestore.instance
           .collection("map_pinnedLocation")
           .get()
           .then((QuerySnapshot querySnapshot) => {
@@ -335,43 +357,22 @@ class _HomePageState extends ConsumerState<HomePage> with Userinformation {
                     showMarkers(greatercoordinates);
                   } // else end
                 }) //for loop
-              });
+              }); */
     } //else end
   }
 
-  // showing markers
+  // showing markers in Thesis Zone
   Future showMarkers(greatercoordinates) async {
-    // debugPrint(greatercoordinates.latitude.toString());
-    // ScaffoldMessenger.of(context).showSnackBar( SnackBar(
-    //     content: Text(
-    //         data["coords"].latitude.toString()
-    //     ) )
-    // );
-
-    /*   Query namequery = FirebaseFirestore.instance
-        .collection("markers")
-        .where("request_status", isEqualTo: true)
-        .where("coords", isGreaterThanOrEqualTo: greatercoordinates);
- */
     await FirebaseFirestore.instance
         .collection("markers")
-        //   .where("request_status", isEqualTo: true)
         .where("coords", isGreaterThanOrEqualTo: greatercoordinates)
-        //.orderBy("coords", descending: true)
         .limit(1)
         .get()
         .then((QuerySnapshot querySnapshot) => {
               querySnapshot.docs.forEach((documents) async {
                 var data = documents.data() as Map;
-                // ScaffoldMessenger.of(context).showSnackBar( SnackBar(
-                //     content: Text(
-                //         data["coords"].latitude.toString()
-                //             +"\n"+ greatercoordinates.latitude.toString()
-                //     ) )
-                // );
-                if (data['request_status'] == true) {
-                  //debugPrint("theres data");
 
+                if (data['request_status'] == true) {
                   allmarkers.add(Marker(
                       onTap: () async {
                         Navigator.push(
@@ -573,165 +574,169 @@ class _HomePageState extends ConsumerState<HomePage> with Userinformation {
     //Providers
     final allSearchResults = ref.watch(placeResultsProvider);
     final searchFlag = ref.watch(searchToggleProvider);
-    /* return FutureBuilder(
-      future: testMarker(),
+    return FutureBuilder(
+      future: markersInParallel(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasError) {
           return const Text('Something went wrong');
         }
         if (snapshot.hasData == false) {
           return const Center(child: CircularProgressIndicator.adaptive());
-        } */
+        }
 
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Stack(
+        return Scaffold(
+          body: SingleChildScrollView(
+            child: Column(
               children: [
-                Container(
-                  height: screenHeight,
-                  width: screenWidth,
-                  child: GoogleMap(
-                    mapType: MapType.normal,
-                    // markers: _markerss,
-                    onTap: (latLng) {
-                      markerOnClick(latLng.latitude, latLng.longitude);
-                    },
-                    markers: allmarkers,
-                    polylines: _polylines,
-                    initialCameraPosition: _kGooglePlex,
-                    onMapCreated: (GoogleMapController controller) {
-                      _controller.complete(controller);
-                    },
-                  ),
-                ),
-                pressedNear
-                    ? builds(context)
-                    : searchToggle
-                        ? Padding(
-                            padding: const EdgeInsets.fromLTRB(
-                                15.0, 70.0, 15.0, 5.0),
-                            child: Column(children: [
-                              Container(
-                                height: 50.0,
-                                width: 280,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  color: Colors.white,
-                                ),
-                                child: TextFormField(
-                                  controller: searchController,
-                                  decoration: const InputDecoration(
-                                    contentPadding: EdgeInsets.symmetric(
-                                        horizontal: 20.0, vertical: 15.0),
-                                    border: InputBorder.none,
-                                    prefixIcon: const Icon(Icons.search),
-                                    hintText: 'Search',
-                                  ),
-                                  onChanged: (value) {
-                                    if (_debounce?.isActive ?? false) {
-                                      _debounce?.cancel();
-                                    }
-                                    _debounce =
-                                        Timer(const Duration(milliseconds: 700),
-                                            () async {
-                                      if (value.length > 2) {
-                                        if (!searchFlag.searchToggle) {
-                                          searchFlag.toggleSearch();
-                                          _markers = {};
+                Stack(
+                  children: [
+                    Container(
+                      height: screenHeight,
+                      width: screenWidth,
+                      child: GoogleMap(
+                        mapType: MapType.normal,
+                        // markers: _markerss,
+                        onTap: (latLng) {
+                          markerOnClick(latLng.latitude, latLng.longitude);
+                        },
+                        markers: allmarkers,
+                        polylines: _polylines,
+                        initialCameraPosition: _kGooglePlex,
+                        onMapCreated: (GoogleMapController controller) {
+                          _controller.complete(controller);
+                        },
+                      ),
+                    ),
+                    pressedNear
+                        ? builds(context)
+                        : searchToggle
+                            ? Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                    15.0, 70.0, 15.0, 5.0),
+                                child: Column(children: [
+                                  Container(
+                                    height: 50.0,
+                                    width: 280,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      color: Colors.white,
+                                    ),
+                                    child: TextFormField(
+                                      controller: searchController,
+                                      decoration: const InputDecoration(
+                                        contentPadding: EdgeInsets.symmetric(
+                                            horizontal: 20.0, vertical: 15.0),
+                                        border: InputBorder.none,
+                                        prefixIcon: const Icon(Icons.search),
+                                        hintText: 'Search',
+                                      ),
+                                      onChanged: (value) {
+                                        if (_debounce?.isActive ?? false) {
+                                          _debounce?.cancel();
                                         }
-                                        List<AutoCompleteResult> searchResults =
-                                            await MapServices()
-                                                .searchPlaces(value);
+                                        _debounce = Timer(
+                                            const Duration(milliseconds: 700),
+                                            () async {
+                                          if (value.length > 2) {
+                                            if (!searchFlag.searchToggle) {
+                                              searchFlag.toggleSearch();
+                                              _markers = {};
+                                            }
+                                            List<AutoCompleteResult>
+                                                searchResults =
+                                                await MapServices()
+                                                    .searchPlaces(value);
 
-                                        allSearchResults
-                                            .setResults(searchResults);
-                                      } else {
-                                        List<AutoCompleteResult> emptyList = [];
-                                        allSearchResults.setResults(emptyList);
-                                      }
-                                    });
-                                  },
-                                ),
-                              ),
-                            ]),
-                          )
+                                            allSearchResults
+                                                .setResults(searchResults);
+                                          } else {
+                                            List<AutoCompleteResult> emptyList =
+                                                [];
+                                            allSearchResults
+                                                .setResults(emptyList);
+                                          }
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ]),
+                              )
+                            : Container(),
+                    searchFlag.searchToggle
+                        ? allSearchResults.allReturnedResults.isNotEmpty
+                            ? Positioned(
+                                top: 100.0,
+                                left: 15.0,
+                                child: Container(
+                                  height: 200.0,
+                                  width: screenWidth - 30.0,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    color: Colors.white.withOpacity(0.7),
+                                  ),
+                                  child: ListView(
+                                    children: [
+                                      ...allSearchResults.allReturnedResults
+                                          .map((e) =>
+                                              buildListItem(e, searchFlag))
+                                    ],
+                                  ),
+                                ))
+                            : Positioned(
+                                top: 100.0,
+                                left: 15.0,
+                                child: HomeNoResultToShow(
+                                    screenWidth: screenWidth,
+                                    searchFlag: searchFlag))
                         : Container(),
-                searchFlag.searchToggle
-                    ? allSearchResults.allReturnedResults.isNotEmpty
-                        ? Positioned(
-                            top: 100.0,
-                            left: 15.0,
-                            child: Container(
-                              height: 200.0,
-                              width: screenWidth - 30.0,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.0),
-                                color: Colors.white.withOpacity(0.7),
-                              ),
-                              child: ListView(
-                                children: [
-                                  ...allSearchResults.allReturnedResults
-                                      .map((e) => buildListItem(e, searchFlag))
-                                ],
-                              ),
-                            ))
-                        : Positioned(
-                            top: 100.0,
-                            left: 15.0,
-                            child: HomeNoResultToShow(
-                                screenWidth: screenWidth,
-                                searchFlag: searchFlag))
-                    : Container(),
-                //    getmarker(context), //to automatically show marker to map
+                    //    getmarker(context), //to automatically show marker to map
+                  ],
+                )
               ],
-            )
-          ],
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
-      floatingActionButton: Column(
-        children: [
-          const SizedBox(height: 30),
+            ),
+          ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
+          floatingActionButton: Column(
+            children: [
+              const SizedBox(height: 30),
 
-          FloatingButtonUserProfile(
-              UserInfofirstname: UserInfofirstname,
-              UserInfolastname:
-                  UserInfolastname), //breaking the Widget of floating button and passing the data from the stateless widget below
-          // const HomeFloatingDialog(),
-          FloatingActionButton(
-            disabledElevation: 0,
-            elevation: 0.0,
-            backgroundColor: Colors.white,
-            mini: true,
-            heroTag: null,
-            child: const Icon(Icons.info),
-            foregroundColor: Colors.blue,
-            onPressed: () {
-              Discover().showDiscover(context);
-            },
+              /*     FloatingButtonUserProfile(
+                  UserInfofirstname: UserInfofirstname,
+                  UserInfolastname:
+                      UserInfolastname), */ //breaking the Widget of floating button and passing the data from the stateless widget below
+              // const HomeFloatingDialog(),
+              FloatingActionButton(
+                disabledElevation: 0,
+                elevation: 0.0,
+                backgroundColor: Colors.white,
+                mini: true,
+                heroTag: null,
+                foregroundColor: Colors.blue,
+                onPressed: () {
+                  Discover().showDiscover(context);
+                },
+                child: const Icon(Icons.info),
+              ),
+              /*   FloatingActionButton(
+                disabledElevation: 0,
+                elevation: 0.0,
+                backgroundColor: Colors.white,
+                mini: true,
+                heroTag: null,
+                child: const Icon(Icons.home_work_outlined),
+                foregroundColor: Colors.blue,
+                onPressed: () {
+                  goToWebPage(
+                      "https://play.unity.com/mg/other/webgl-builds-329405");
+                  // Discover().showDiscover(context);
+                },
+              ), */
+            ],
           ),
-          FloatingActionButton(
-            disabledElevation: 0,
-            elevation: 0.0,
-            backgroundColor: Colors.white,
-            mini: true,
-            heroTag: null,
-            child: const Icon(Icons.home_work_outlined),
-            foregroundColor: Colors.blue,
-            onPressed: () {
-              goToWebPage(
-                  "https://play.unity.com/mg/other/webgl-builds-329405");
-              // Discover().showDiscover(context);
-            },
-          ),
-        ],
-      ),
-      resizeToAvoidBottomInset: false,
+          resizeToAvoidBottomInset: false,
+        );
+      },
     );
-    // },
-    // );
   }
 
   /* void _showAction(BuildContext context) {

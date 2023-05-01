@@ -36,7 +36,7 @@ class DialogQuestion {
   final TextEditingController areaBudgetController = TextEditingController();
   final areaController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  double _currentSliderValue = 10000;
+  double _currentSliderValue = 1000;
   static const colortext = Color.fromARGB(255, 74, 74, 74);
 
   Future demogResult(BuildContext context) async {
@@ -353,7 +353,7 @@ class DialogQuestion {
 
                     Slider(
                       value: _currentSliderValue,
-                      min: 10000,
+                      min: 1000,
                       max: 50000,
                       divisions: 20,
                       label:
