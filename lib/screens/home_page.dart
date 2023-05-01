@@ -700,10 +700,10 @@ class _HomePageState extends ConsumerState<HomePage> with Userinformation {
             children: [
               const SizedBox(height: 30),
 
-              /*     FloatingButtonUserProfile(
+              FloatingButtonUserProfile(
                   UserInfofirstname: UserInfofirstname,
                   UserInfolastname:
-                      UserInfolastname), */ //breaking the Widget of floating button and passing the data from the stateless widget below
+                      UserInfolastname), //breaking the Widget of floating button and passing the data from the stateless widget below
               // const HomeFloatingDialog(),
               FloatingActionButton(
                 disabledElevation: 0,

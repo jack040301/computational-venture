@@ -43,7 +43,7 @@ class RequestedDialog {
 
     var docu = GoogleUserStaticInfo().uid.toString();
     FirebaseFirestore.instance
-        .collection("markers")
+        .collection("parallel_markers")
         .where('user_id_requested', isEqualTo: docu)
         .get()
         .then((QuerySnapshot querySnapshot) => {
@@ -94,7 +94,7 @@ class RequestedDialog {
 
                                     var db = FirebaseFirestore.instance;
                                     db
-                                        .collection("markers")
+                                        .collection("parallel_markers")
                                         .doc(count.toString() +
                                             "-" +
                                             GoogleUserStaticInfo()
@@ -125,7 +125,7 @@ class RequestedDialog {
 
   Future<int> countPerUserRequest() async {
     await FirebaseFirestore.instance
-        .collection("markers")
+        .collection("parallel_markers")
         .where("user_id", isEqualTo: GoogleUserStaticInfo().uid)
         .get()
         .then(
