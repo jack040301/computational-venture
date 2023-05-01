@@ -45,7 +45,7 @@ class RequestedDialog {
 
     var docu = GoogleUserStaticInfo().uid.toString();
     FirebaseFirestore.instance
-        .collection("markers")
+        .collection("parallel_markers")
         .where('user_id_requested', isEqualTo: docu)
         .get()
         .then((QuerySnapshot querySnapshot) => {
@@ -66,7 +66,7 @@ class RequestedDialog {
                       // TESTING
 
                       FirebaseFirestore.instance
-                          .collection("markers")
+                          .collection("parallel_markers")
                           .where("coords", isGreaterThanOrEqualTo: geopoint)
                           .orderBy("coords", descending: true)
                           .limit(1)
@@ -97,7 +97,7 @@ class RequestedDialog {
 
                                     var db = FirebaseFirestore.instance;
                                     db
-                                        .collection("markers")
+                                        .collection("parallel_markers")
                                         .doc(count.toString() +
                                             "-" +
                                             GoogleUserStaticInfo()
@@ -145,7 +145,7 @@ class RequestedDialog {
         (element) => element.markerId == MarkerId("marker_$counter"));
 
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        behavior: SnackBarBehavior.floating,
+        // behavior: SnackBarBehavior.floating,
         content: Text('Tap to another place')));
   }
 
