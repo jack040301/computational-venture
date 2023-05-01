@@ -54,7 +54,7 @@ class _SignupWidgetState extends State<SignupWidget> {
   // }
 
   var tSnackBar = const SnackBar(
-   // behavior: SnackBarBehavior.floating,
+    // behavior: SnackBarBehavior.floating,
     content: Text('Email Field Must Fill!'),
   );
 
@@ -307,15 +307,15 @@ class _SignupWidgetState extends State<SignupWidget> {
                         fillColor: const Color.fromARGB(255, 0, 110, 195),
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  //      behavior: SnackBarBehavior.floating,
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                                    //      behavior: SnackBarBehavior.floating,
                                     content: Text('Processing Data')));
                             createAccount();
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                  //     behavior: SnackBarBehavior.floating,
+                                    //     behavior: SnackBarBehavior.floating,
                                     content:
                                         Text('Fill out the required field')));
                           }
@@ -427,6 +427,7 @@ class _SignupWidgetState extends State<SignupWidget> {
                   'lastname': lastNameController.text.trim(),
                   'email': value.user!.email,
                   'password': passwordController.text.trim(),
+                  'role': 'user',
                 }));
       } else {
         //    print('Fields are empty');

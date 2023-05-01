@@ -323,7 +323,7 @@ class _HomePageState extends ConsumerState<HomePage> with Userinformation {
       ScaffoldMessenger.of(context).showSnackBar(map_pinnedLoc);
     } else {
       // debugPrint(greatercoordinates.latitude.toString());
-      ScaffoldMessenger.of(context).showSnackBar(PinRequestedSuccessfully);
+      //   ScaffoldMessenger.of(context).showSnackBar(PinRequestedSuccessfully);
       /*  await FirebaseFirestore.instance
           .collection("map_pinnedLocation")
           .get()

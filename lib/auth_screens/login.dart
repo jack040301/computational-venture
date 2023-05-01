@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:introduction_screen/introduction_screen.dart';
 import 'package:main_venture/auth_screens/forgot_password.dart';
 import 'package:main_venture/auth_screens/signup.dart';
 import 'package:main_venture/screens/onboarding_screen.dart';
@@ -296,12 +295,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           //   'lastname': GoogleUserStaticInfo().lastname,
                           //   'email': value.user!.email,
                           // })); pushAndRemoveUntil
-                          /*     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                        const HomePage())); */
+
+                          // print("with account");
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) =>
-                                  const IntroductionScreens()));
+                              builder: (context) => const HomePage()));
 
                           // await users.doc(GoogleUserStaticInfo().uid).set({
                           //   'firstname': GoogleUserStaticInfo().firstname,
@@ -309,17 +306,20 @@ class _LoginScreenState extends State<LoginScreen> {
                           //   'email': GoogleUserStaticInfo().email,
                           // }).onError((error, stackTrace) => (error.toString()));
                         } else {
+                          // print("no account");
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (context) => const personalinfo()),
+                              (Route route) => false);
+
                           await users.doc(GoogleUserStaticInfo().uid).set({
                             'firstname': GoogleUserStaticInfo().firstname,
                             'lastname': GoogleUserStaticInfo().lastname,
                             'email': GoogleUserStaticInfo().email,
                           }).onError((error, stackTrace) => (error.toString()));
+
                           // pushAndRemoveUntil
                           // Navigator.of(context).push(MaterialPageRoute(
-                          Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                  builder: (context) => const personalinfo()),
-                              (Route route) => false);
                           //     builder: (context) => const HomePage()));
                         }
                       },
