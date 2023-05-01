@@ -58,7 +58,7 @@ dependencies:
   charts_flutter:
   http:
   lottie:
-  smooth_page_indicator:
+ 
   dartz:
   fl_chart:
   google_maps_flutter:
