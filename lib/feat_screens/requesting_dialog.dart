@@ -36,7 +36,7 @@ class RequestedDialog {
   bool hasEnd = false;
   var now = DateTime.now();
 
-  Future savedRequestMarker(context) async {
+  /* Future savedRequestMarker(context) async {
     count += 1;
     var formattedTimestamp = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
     // print(formattedTimestamp);
@@ -125,11 +125,52 @@ class RequestedDialog {
                 //
               }) //for loop
             });
+  } */
+  var SnackDialog = const SnackBar(
+    content: Text('Requested'),
+  );
+
+  Future savedRequestMarker(context) async {
+    count += 1;
+    var formattedTimestamp = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
+    // print(formattedTimestamp);
+
+    GeoPoint geopoint = GeoPoint(lat, lng);
+
+    final pinnedData = {
+      "coords": geopoint,
+      "place": "pinned-request by ${GoogleUserStaticInfo().name}",
+      "land": 10000,
+      "land_size": "1000",
+      "popu_future": "200000",
+      "popu_past": "15000",
+      "population": "25000",
+      "revenue": "25000",
+      "user_id_requested": GoogleUserStaticInfo().uid,
+      "date_and_time": formattedTimestamp,
+      "request_status": false,
+    };
+
+    var db = FirebaseFirestore.instance;
+    db
+        .collection("parallel_markers")
+        .doc(count.toString() + "-" + GoogleUserStaticInfo().email.toString())
+        .set(pinnedData)
+        .then((documentSnapshot) => {
+              // print("ok"),
+              alertmessage(context)
+              //showing if data is saved
+            })
+        .catchError((error) {
+      ScaffoldMessenger.of(context).showSnackBar(error);
+    });
+
+    return ScaffoldMessenger.of(context).showSnackBar(SnackDialog);
   }
 
   Future<int> countPerUserRequest() async {
     await FirebaseFirestore.instance
-        .collection("markers")
+        .collection("parallel_markers")
         .where("user_id", isEqualTo: GoogleUserStaticInfo().uid)
         .get()
         .then(

@@ -298,7 +298,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
                           // print("with account");
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const HomePage()));
+                              builder: (context) =>
+                                  const IntroductionScreens()));
 
                           // await users.doc(GoogleUserStaticInfo().uid).set({
                           //   'firstname': GoogleUserStaticInfo().firstname,
@@ -307,10 +308,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           // }).onError((error, stackTrace) => (error.toString()));
                         } else {
                           // print("no account");
-                          Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                  builder: (context) => const personalinfo()),
-                              (Route route) => false);
 
                           await users.doc(GoogleUserStaticInfo().uid).set({
                             'firstname': GoogleUserStaticInfo().firstname,
@@ -319,6 +316,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           }).onError((error, stackTrace) => (error.toString()));
 
                           // pushAndRemoveUntil
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (context) => const personalinfo()),
+                              (Route route) => false);
                           // Navigator.of(context).push(MaterialPageRoute(
                           //     builder: (context) => const HomePage()));
                         }

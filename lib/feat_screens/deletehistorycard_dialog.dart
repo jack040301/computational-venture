@@ -14,7 +14,7 @@ class DeleteHistoryCardDialog {
     content: Text('Deleted Successfully'),
   );
   CollectionReference pinnedhistory =
-      FirebaseFirestore.instance.collection('pinnedlocation');
+      FirebaseFirestore.instance.collection('parallel_pinnedlocation');
 
   Future<void> deleteHistoryCard(historyid, context) {
     return pinnedhistory

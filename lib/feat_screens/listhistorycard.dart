@@ -47,7 +47,7 @@ class ListViewHome extends State<ListViewHomeLayout> {
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: FirebaseFirestore.instance
-            .collection("pinnedlocation")
+            .collection("parallel_pinnedlocation")
             .where('user_id', isEqualTo: GoogleUserStaticInfo().uid)
             .snapshots(),
         builder: (context, snapshot) {

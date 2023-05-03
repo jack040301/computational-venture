@@ -43,6 +43,7 @@ class _DemogResultState extends State<DemogResult> {
   String landbudgetstrA = '';
   String revstrA = '';
   //final GlobalKey _globalKey = GlobalKey();
+  PopSnackbar popSnackbar = PopSnackbar();
 
   // ignore: prefer_typing_uninitialized_variables
   var businessname, businessbudget, landbudget, landrevenue, landpop;
@@ -107,15 +108,26 @@ class _DemogResultState extends State<DemogResult> {
   Future saveDatePinned(pinnedData) async {
     var db = FirebaseFirestore.instance;
     db
-        .collection("pinnedlocation")
+        .collection("parallel_pinnedlocation")
         .add(pinnedData)
         .then((documentSnapshot) => {
-              debugPrint("savedData")
+              //debugPrint("savedData")
               //showing if data is saved
+              /*  ScaffoldMessenger.of(context).showSnackBar(
+                  popSnackbar.popsnackbar("Sucessfully Downloaded Result")) */
             })
         .catchError((error) {
       ScaffoldMessenger.of(context).showSnackBar(error);
     });
+
+    return Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ForecastingNavBar(
+                  markerid: widget.marker,
+                  businessname: businessname,
+                  //         markerid: widget.budget,
+                )));
   }
 
   Future<void> ChartForecasting(BuildContext context) async {
@@ -159,7 +171,6 @@ class _DemogResultState extends State<DemogResult> {
   }
 
   Future<String> savingImage(Uint8List bytes) async {
-    PopSnackbar popSnackbar = PopSnackbar();
     await [Permission.storage].request();
     final time = DateTime.now()
         .toIso8601String()
@@ -242,6 +253,7 @@ class _DemogResultState extends State<DemogResult> {
             "budget_required": landbudgetstrB,
             "user_id": GoogleUserStaticInfo().uid,
             "marker_id": widget.marker,
+            "parallel_markers": true,
           };
           return Scaffold(
               backgroundColor: const Color.fromARGB(255, 241, 242, 242),
@@ -654,18 +666,9 @@ class _DemogResultState extends State<DemogResult> {
                                           /*  await StatisForecastingNavBar(
                                               context); */
 
-                                          await Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ForecastingNavBar(
-                                                        markerid: widget.marker,
-                                                        businessname:
-                                                            businessname,
-                                                        //         markerid: widget.budget,
-                                                      )));
-
                                           await saveDatePinned(pinnedData);
+                                          // ignore: use_build_context_synchronously
+
                                           /*     Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
