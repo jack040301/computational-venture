@@ -149,6 +149,7 @@ class RequestedDialog {
       "user_id_requested": GoogleUserStaticInfo().uid,
       "date_and_time": formattedTimestamp,
       "request_status": false,
+      "user_email_requested": GoogleUserStaticInfo().email,
     };
 
     var db = FirebaseFirestore.instance;
